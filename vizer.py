@@ -11,8 +11,10 @@ import pandasql as psql
 plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
 
+list_of_sp = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')[0]
+
 st.sidebar.title("Daily Closing Stock Value Visualizer")
-stock = st.sidebar.text_input('Enter stock')
+stock = st.sidebar.selectbox('Select a stock:', list_of_sp.Symbol.unique())
 st.sidebar.write('You entered: ', stock)
 
 
@@ -68,17 +70,26 @@ try:
 
 
     def main():
+
+        """
+        Sidebar
+        """
         record_event = False
-        
         if st.sidebar.checkbox("Record event"):
             record_event = True
         
         data = scrape_loader(stock,record_event).copy()
-
         cols = st.sidebar.multiselect("Choose metrics to view:",data.columns.drop(['prev_val','volume_col']))
+        
+        sel_stock = list_of_sp[list_of_sp.Symbol == stock]
+        st.sidebar.write(sel_stock)
 
+        """
+        Main Panel
+        """
         st.write(data[cols])  
         value_viz(data)
+                        
         
 
     if __name__ == "__main__":
