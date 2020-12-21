@@ -7,7 +7,7 @@ import datetime
 import time
 import pandasql as psql
 
-plt.style.use('seaborn-whitegrid')
+#plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
 
 list_of_sp = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')[0]
