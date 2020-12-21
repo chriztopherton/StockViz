@@ -1,13 +1,14 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
+import matplotlib.pyplot as plt
 import plotly.express as px
 import plotly.graph_objects as go
 import datetime
 import time
 import pandasql as psql
 
-#plt.style.use('seaborn-whitegrid')
+plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
 
 list_of_sp = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')[0]
