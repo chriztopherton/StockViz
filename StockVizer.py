@@ -68,9 +68,9 @@ try:
 
     def main():
 
-        """
-        Sidebar
-        """
+        # Sidebar
+        st.sidebar.header("Select input options!")
+
         record_event = False
         if st.sidebar.checkbox("Record event"):
             record_event = True
@@ -78,9 +78,8 @@ try:
         data = scrape_loader(stock,record_event).copy()
         cols = st.sidebar.multiselect("Choose metrics to view:",data.columns.drop(['prev_val','volume_col']))
 
-        """
-        Main Panel
-        """
+        # Main
+
         st.write(data[cols])  
         value_viz(data)
 
