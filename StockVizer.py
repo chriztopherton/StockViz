@@ -16,10 +16,15 @@ st.sidebar.write('You entered: ', stock)
 
 
 try:
-    @st.cache(allow_output_mutation=True)
-    def scrape_loader(stock,record_event): 
+
+    @st.cache
+    def scrape(stock):
         link_to_data = f'https://ca.finance.yahoo.com/quote/{stock}/history?p={stock}'
-        dt = pd.read_html(link_to_data,flavor='html5lib')[0]
+        dt = pd.read_html(link_to_data)[0]
+        return dt
+
+    @st.cache(allow_output_mutation=True)
+    def mutator(dt,record_event): 
         dt.drop(dt.tail(1).index,inplace=True) # drop last row, not relevant
         dt.Date = pd.to_datetime(dt.Date) # convert first column to date object
 
@@ -75,13 +80,15 @@ try:
         if st.sidebar.checkbox("Record event"):
             record_event = True
         
-        data = scrape_loader(stock,record_event).copy()
-        cols = st.sidebar.multiselect("Choose metrics to view:",data.columns.drop(['prev_val','volume_col']))
+        raw_data = scrape(stock).copy()
+        mutated_data = mutator(raw_data,record_event)
+        cols = st.sidebar.multiselect("Choose metrics to view:",
+                                        mutated_data.columns.drop(['prev_val','volume_col']))
 
         # Main
 
-        st.write(data[cols])  
-        value_viz(data)
+        st.write(mutated_data[cols])  
+        value_viz(mutated_data)
 
     if __name__ == "__main__":
         main()
