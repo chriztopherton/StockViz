@@ -10,10 +10,8 @@ import time
 plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
 
-list_of_sp = pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies',flavor='html5lib')[0]
-
 st.sidebar.title("Daily Closing Stock Value Visualizer")
-stock = st.sidebar.selectbox('Select a stock:', list_of_sp.Symbol.unique())
+stock = st.sidebar.text_input('Enter a stock:', "TSLA")
 st.sidebar.write('You entered: ', stock)
 
 
@@ -37,7 +35,7 @@ try:
 
         dt['prev_val'] = dt['Close*'].shift(-1)
         dt['volume_col'] = np.where(dt.prev_val < dt['Close*'],1,0)
-        dt.Volume = dt.Volume.astype('int')/10000
+        dt.Volume = dt.Volume.astype('int')/1000000
 
         return dt
 
