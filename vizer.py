@@ -11,7 +11,7 @@ plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
 
 st.sidebar.title("Daily Closing Stock Value Visualizer")
-stock = st.sidebar.text_input('Enter a stock:', "TSLA")
+stock = st.sidebar.text_input('Enter stock',"TSLA")
 st.sidebar.write('You entered: ', stock)
 
 
@@ -77,9 +77,6 @@ try:
         
         data = scrape_loader(stock,record_event).copy()
         cols = st.sidebar.multiselect("Choose metrics to view:",data.columns.drop(['prev_val','volume_col']))
-        
-        sel_stock = list_of_sp[list_of_sp.Symbol == stock]
-        st.sidebar.write(sel_stock)
 
         """
         Main Panel
