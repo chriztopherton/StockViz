@@ -6,7 +6,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 import datetime
 import time
-import html5lib
 
 plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
