@@ -82,15 +82,14 @@ try:
             record_event = True
 
         raw_data = scrape(stock).copy()
-        #mutated_data = mutator(raw_data,record_event)
-        #cols = st.sidebar.multiselect("Choose metrics to view:",mutated_data.columns.drop(['prev_val','volume_col']))
+        mutated_data = mutator(raw_data,record_event)
+        cols = st.sidebar.multiselect("Choose metrics to view:",mutated_data.columns.drop(['prev_val','volume_col']))
 
         # Main
 
-        st.write(raw_data)
 
-        #st.write(mutated_data[cols])  
-        #value_viz(mutated_data)
+        st.write(mutated_data[cols])  
+        value_viz(mutated_data)
 
     if __name__ == "__main__":
         main()
