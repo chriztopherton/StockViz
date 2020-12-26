@@ -76,10 +76,12 @@ try:
         # Sidebar
         st.sidebar.header("Select input options!")
 
+
+
         record_event = False
         if st.sidebar.checkbox("Record event"):
             record_event = True
-        
+                    
         raw_data = scrape(stock).copy()
         mutated_data = mutator(raw_data,record_event)
         cols = st.sidebar.multiselect("Choose metrics to view:",
