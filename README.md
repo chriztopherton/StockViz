@@ -2,6 +2,8 @@
 
 Please visit  [![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://share.streamlit.io/chriztopherton/stockviz/main/StockVizer.py)
 
+Project used **Python 3.8.3**
+
 
 Change directory to whereever you'd like to store this project 
 
