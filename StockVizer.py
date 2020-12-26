@@ -22,7 +22,7 @@ try:
         link_to_data = f'https://ca.finance.yahoo.com/quote/{stock}/history?p={stock}'
         dt = pd.read_html(link_to_data)[0]
         return dt
-        
+
     def mutator(dt,record_event): 
         dt.drop(dt.tail(1).index,inplace=True) # drop last row, not relevant
         dt.Date = pd.to_datetime(dt.Date) # convert first column to date object
@@ -82,14 +82,15 @@ try:
             record_event = True
 
         raw_data = scrape(stock).copy()
-        mutated_data = mutator(raw_data,record_event)
-        cols = st.sidebar.multiselect("Choose metrics to view:",
-                                        mutated_data.columns.drop(['prev_val','volume_col']))
+        #mutated_data = mutator(raw_data,record_event)
+        #cols = st.sidebar.multiselect("Choose metrics to view:",mutated_data.columns.drop(['prev_val','volume_col']))
 
         # Main
 
-        st.write(mutated_data[cols])  
-        value_viz(mutated_data)
+        st.write(raw_data)
+
+        #st.write(mutated_data[cols])  
+        #value_viz(mutated_data)
 
     if __name__ == "__main__":
         main()
