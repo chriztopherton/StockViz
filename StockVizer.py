@@ -11,8 +11,8 @@ plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
 
 st.sidebar.title("Daily Closing Stock Value Visualizer")
-stock = st.sidebar.text_input('Enter stock',"TSLA")
-st.sidebar.write('You entered: ', stock)
+input = st.sidebar.text_input('Enter stock',"TSLA")
+st.sidebar.write('You entered: ', input)
 
 
 try:
@@ -62,7 +62,7 @@ try:
     def value_viz(dat):
         dat = dat[np.count_nonzero(dat.values, axis=1) > len(dat.columns)-2]
 
-        fig = go.Figure(layout=dict(title=dict(text=f'{stock} Stock')))
+        fig = go.Figure(layout=dict(title=dict(text=f'{input} Stock')))
         fig.add_trace(go.Scatter(x=dat.Date, y=dat['Close*'],mode='lines',name='Price'))
         fig.add_trace(go.Bar(x=dat.Date,y=dat.Volume))
         fig.update_layout(hovermode='x unified')
@@ -81,7 +81,7 @@ try:
         if st.sidebar.checkbox("Record event"):
             record_event = True
 
-        raw_data = scrape(stock).copy()
+        raw_data = scrape(input).copy()
         mutated_data = mutator(raw_data,record_event)
         cols = st.sidebar.multiselect("Choose metrics to view:",mutated_data.columns.drop(['prev_val','volume_col']))
 
