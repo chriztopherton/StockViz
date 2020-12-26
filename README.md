@@ -7,7 +7,7 @@ Change directory to whereever you'd like to store this project
 
 Fork project and
 ```
-git clone https://github.com/chriztopherton/StockViz.git && cd AWS-NVIDIA_AnomDet
+git clone https://github.com/chriztopherton/StockViz.git && cd StockViz
 ```
 
 Create a virtual environment and install packages
