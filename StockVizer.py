@@ -1,11 +1,13 @@
 import streamlit as st
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import plotly.express as px
+from plotly.subplots import make_subplots
 import plotly.graph_objects as go
+import matplotlib.pyplot as plt
 import datetime
 import time
+import math
 
 plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
@@ -18,28 +20,26 @@ st.sidebar.write('You entered: ', input)
 try:
 
     @st.cache
-    def scrape(stock):
-        link_to_data = f'https://ca.finance.yahoo.com/quote/{stock}/history?p={stock}'
+    def scrape(rc):
+        link_to_data = f'https://ca.finance.yahoo.com/quote/{input}/history?p={input}'
         dt = pd.read_html(link_to_data)[0]
-        return dt
-
-    def mutator(dt,record_event): 
+        
         dt.drop(dt.tail(1).index,inplace=True) # drop last row, not relevant
-        dt.Date = pd.to_datetime(dt.Date) # convert first column to date object
+        dt['Date']= pd.to_datetime(dt['Date']) # convert first column to date object 
 
-        if record_event:
+        if rc:
             bool_event = pd.to_numeric(dt['Close*'], errors='coerce').isnull()
             event_slice = dt[bool_event]
             if bool_event.sum() >= 1:
                 event_indx = event_slice.index.to_list()[0] #find event dates, such as splits
                 dt = dt.head(event_indx).copy()
-        else:
-            cols = dt.columns.drop('Date')
-            dt[cols] = dt[cols].apply(pd.to_numeric, errors='coerce').fillna(0)
+        
+        cols = dt.columns.drop('Date')
+        dt[cols] = dt[cols].apply(pd.to_numeric, errors='coerce').fillna(0)
 
         dt['prev_val'] = dt['Close*'].shift(-1)
         dt['volume_col'] = np.where(dt.prev_val < dt['Close*'],1,0)
-        dt.Volume = dt.Volume.astype('int')/1000000
+        
 
         return dt
 
@@ -59,13 +59,20 @@ try:
 
             return d
     
-    def value_viz(dat):
-        dat = dat[np.count_nonzero(dat.values, axis=1) > len(dat.columns)-2]
+    def value_viz(dt):
+        dt = dt[np.count_nonzero(dt.values, axis=1) > len(dt.columns)-2]
 
-        fig = go.Figure(layout=dict(title=dict(text=f'{input} Stock')))
-        fig.add_trace(go.Scatter(x=dat.Date, y=dat['Close*'],mode='lines',name='Price'))
-        fig.add_trace(go.Bar(x=dat.Date,y=dat.Volume))
-        fig.update_layout(hovermode='x unified')
+        fig = make_subplots(rows=2, cols=1,shared_xaxes=True)
+        fig.append_trace(go.Scatter(x=dt.Date, y=dt['Close*'],mode='lines',name='Price'), row=1, col=1)
+
+        vol_colors = {0:"red",1:"green"}
+        for t in dt['volume_col'].unique():
+            dtp = dt[dt['volume_col']==t]
+            fig.append_trace(go.Bar(x=dtp.Date, y = dtp.Volume,
+                                marker_color=vol_colors[t]),row=2, col=1)
+            
+        fig.update_layout(hovermode='x unified',height=600, width=800,
+                        title_text=f'Price & Volume of {input} Stock')
 
         st.plotly_chart(fig)
 
@@ -73,7 +80,7 @@ try:
     def main():
 
         # Sidebar
-        st.sidebar.header("Select input options!")
+        #st.sidebar.header("Select input options!")
 
 
 
@@ -81,15 +88,23 @@ try:
         if st.sidebar.checkbox("Record event"):
             record_event = True
 
-        raw_data = scrape(input).copy()
-        mutated_data = mutator(raw_data,record_event)
-        cols = st.sidebar.multiselect("Choose metrics to view:",mutated_data.columns.drop(['prev_val','volume_col']))
+        raw_data = scrape(record_event).copy()
+        cols_options = raw_data.columns.drop(['prev_val','volume_col'])
+
+
+
+        #cols_select = st.sidebar.multiselect("Choose metrics to view:",cols_options)
 
         # Main
+        st.markdown("This displays metrics selected from the left-hand sidebar")
+        if st.sidebar.checkbox("Show full data:"):
+            st.write(raw_data)
+        else:
+            st.write(raw_data[['Date','Close*','Volume']])
 
+        st.markdown("Subplots for closing price and volume colored by corresponding trend")
 
-        st.write(mutated_data[cols])  
-        value_viz(mutated_data)
+        value_viz(raw_data)
 
     if __name__ == "__main__":
         main()
