@@ -68,7 +68,7 @@ try:
                             row_heights=[0.8, 0.2],
                             vertical_spacing=0.1,
                             subplot_titles=("Closing Price", "Volume"))
-        fig.append_trace(go.Scatter(x=dt.Date, y=dt['Close*'],mode='lines',name='Price'), row=1, col=1)
+        fig.append_trace(go.Scatter(x=dt.Date, y=dt['Close*'],mode='lines+markers',name='Price'), row=1, col=1)
 
         vol_colors = {0:"red",1:"green"}
         for t in dt['volume_col'].unique(): # for loop: plot each bar and assign appropriate color
@@ -105,6 +105,8 @@ try:
         st.sidebar.write("Latest volume count:",latest_volume_count)
 
 
+
+
         cols_options = raw_data.columns.drop(['prev_val','volume_col'])
 
 
@@ -117,6 +119,8 @@ try:
 
         value_viz(raw_data)
 
+        date = st.sidebar.date_input('start date', datetime.date(2020,1,1))
+        
         purchase_price = st.sidebar.text_input("What was the stock's purhcase price?")
         num_shares = st.sidebar.text_input("How many shares were purchased?")
         #date = st.sidebar.date_input('Purchase date', date.today())
