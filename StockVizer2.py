@@ -61,7 +61,7 @@ try:
 
         # Sidebar
         
-        buy_date = st.sidebar.date_input('When was the stock purchased?', datetime.date(2020,8,10))
+        buy_date = st.sidebar.date_input('When was the stock purchased?', datetime.date(2020,1,10))
 
         raw_data = scrape(buy_date).copy()
         st.write(raw_data.iloc[::-1])
