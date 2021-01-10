@@ -25,10 +25,8 @@ try:
     def scrape(dt):
         start = dt
         end = datetime.datetime.now()
-
         dt = web.DataReader([input], 'yahoo', start, end)
         dt.columns = dt.columns.get_level_values(0)
-
         
         return dt
 
@@ -59,7 +57,6 @@ try:
         st.plotly_chart(fig)
 
         
-
     def main():
 
         # Sidebar
@@ -76,7 +73,7 @@ try:
         st.sidebar.write(today_stats.T)
 
         purchase_price = float(buy_stats['Close'])
-        num_shares = st.sidebar.text_input("How many shares were purchased?")
+        num_shares = st.sidebar.text_input("How many shares were purchased?","1")
 
         net_profit = round(latest_closing_price * int(num_shares) - purchase_price * int(num_shares),2)
         st.sidebar.write("You have profited", net_profit)
