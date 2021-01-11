@@ -17,7 +17,7 @@ plt.style.use('seaborn-whitegrid')
 pd.options.mode.chained_assignment = None
 
 st.sidebar.title("Daily Closing Stock Value Visualizer")
-input = st.sidebar.text_area('Enter 1 or many stocks!') #stock input string defined globally (need to find a better workaround)
+input = st.sidebar.text_area('Enter 1 or many stocks! (i.e. TSLA) ') #stock input string defined globally (need to find a better workaround)
 st.sidebar.write('You entered: ', input)
 
 
